@@ -1,4 +1,4 @@
-FROM docksal/cli:1.2-php7
+FROM docksal/cli:php7
 
 LABEL maintainer "Sean Dietrich <sean.dietrich@inresonance.com>"
 
