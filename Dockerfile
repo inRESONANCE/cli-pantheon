@@ -31,6 +31,10 @@ RUN \
     && mv phantomjs-2.1.1-linux-x86_64/bin/phantomjs /srv/bin/phantomjs \
     && rm -rf phantomjs-2.1.1-linux-x86_64 && rm -f phantomjs-2.1.1-linux-x86_64.tar.bz2 \
     && chmod +x /srv/bin/phantomjs \
+    && mkdir -p /usr/share/drush/commands && mkdir -p /root/.terminus/cache \
+    && cd /usr/share/drush/commands \
+    && curl -L "http://ftp.drupal.org/files/projects/registry_rebuild-7.x-2.3.tar.gz" | tar -zvx \
+    && curl -O "https://raw.githubusercontent.com/drush-ops/config-extra/1.0.1/config_extra.drush.inc" \
     && DEBIAN_FRONTEND=noninteractive apt-get -y clean \
     && DEBIAN_FRONTEND=noninteractive apt-get -y autoclean \
     && DEBIAN_FRONTEND=noninteractive apt-get -y autoremove \
