@@ -27,6 +27,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     && curl -fsSL "https://github.com/Medium/phantomjs/releases/download/v2.1.1/phantomjs-2.1.1-linux-x86_64.tar.bz2" | tar -xjv \
     && mv phantomjs-2.1.1-linux-x86_64/bin/phantomjs /srv/bin/phantomjs \
     && rm -rf phantomjs-2.1.1-linux-x86_64 && rm -f phantomjs-2.1.1-linux-x86_64.tar.bz2 \
+    && mkdir -p /usr/share/drush/commands && mkdir -p /root/.terminus/cache \
+    && cd /usr/share/drush/commands \
+    && curl -L "http://ftp.drupal.org/files/projects/registry_rebuild-7.x-2.3.tar.gz" | tar -zvx \
+    && curl -O "https://raw.githubusercontent.com/drush-ops/config-extra/1.0.1/config_extra.drush.inc" \
     && chmod +x /srv/bin/phantomjs \
     && DEBIAN_FRONTEND=noninteractive apt-get -y clean \
     && DEBIAN_FRONTEND=noninteractive apt-get -y autoclean \
@@ -35,7 +39,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     && rm -rf \
     && rm -rf /var/lib/cache/* \
     && rm -rf /var/lib/log/* \
-    && rm -rf /tmp/*
+    && rm -rf /tmp/* 
 
 RUN \
   # PHP-FPM settings
