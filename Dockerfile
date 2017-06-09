@@ -50,8 +50,8 @@ RUN \
   sed -i '/auto_prepend_file =/c auto_prepend_file = /opt/php/prepend.php' /etc/php/7.0/cli/php.ini
 
 RUN mkdir -p /opt/php
-COPY ../../config/php/prepend.php /opt/php/prepend.php
-COPY ../../startup.sh /opt/startup.sh
+COPY config/php/prepend.php /opt/php/prepend.php
+COPY startup.sh /opt/startup.sh
 
 RUN chmod 777 /opt
 
