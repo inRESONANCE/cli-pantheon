@@ -22,23 +22,23 @@ RUN \
     xfonts-base \
     xfonts-75dpi \
     wkhtmltopdf \
-  && pecl install imagick \
-  && pecl install oauth-2.0.2 \
-  && pecl install redis-3.0.0 \
-  && mkdir -p /srv/bin \
-  && cd /srv/bin \
-  && curl -fsSL "https://github.com/Medium/phantomjs/releases/download/v2.1.1/phantomjs-2.1.1-linux-x86_64.tar.bz2" | tar -xjv \
-  && mv phantomjs-2.1.1-linux-x86_64/bin/phantomjs /srv/bin/phantomjs \
-  && rm -rf phantomjs-2.1.1-linux-x86_64 && rm -f phantomjs-2.1.1-linux-x86_64.tar.bz2 \
-  && chmod +x /srv/bin/phantomjs \
-  && DEBIAN_FRONTEND=noninteractive apt-get -y clean \
-  && DEBIAN_FRONTEND=noninteractive apt-get -y autoclean \
-  && DEBIAN_FRONTEND=noninteractive apt-get -y autoremove \
-  && rm -rf /var/lib/apt/lists/*\
-  && rm -rf \
-  && rm -rf /var/lib/cache/* \
-  && rm -rf /var/lib/log/* \
-  && rm -rf /tmp/*
+    && pecl install imagick \
+    && pecl install oauth-2.0.2 \
+    && pecl install redis-3.0.0 \
+    && mkdir -p /srv/bin \
+    && cd /srv/bin \
+    && curl -fsSL "https://github.com/Medium/phantomjs/releases/download/v2.1.1/phantomjs-2.1.1-linux-x86_64.tar.bz2" | tar -xjv \
+    && mv phantomjs-2.1.1-linux-x86_64/bin/phantomjs /srv/bin/phantomjs \
+    && rm -rf phantomjs-2.1.1-linux-x86_64 && rm -f phantomjs-2.1.1-linux-x86_64.tar.bz2 \
+    && chmod +x /srv/bin/phantomjs \
+    && DEBIAN_FRONTEND=noninteractive apt-get -y clean \
+    && DEBIAN_FRONTEND=noninteractive apt-get -y autoclean \
+    && DEBIAN_FRONTEND=noninteractive apt-get -y autoremove \
+    && rm -rf /var/lib/apt/lists/*\
+    && rm -rf \
+    && rm -rf /var/lib/cache/* \
+    && rm -rf /var/lib/log/* \
+    && rm -rf /tmp/*
 
 RUN \
   # PHP-FPM settings
@@ -50,8 +50,8 @@ RUN \
   sed -i '/auto_prepend_file =/c auto_prepend_file = /opt/php/prepend.php' /etc/php/7.0/cli/php.ini
 
 RUN mkdir -p /opt/php
-COPY config/php/prepend.php /opt/php/prepend.php
-COPY startup.sh /opt/startup.sh
+COPY ../../config/php/prepend.php /opt/php/prepend.php
+COPY ../../startup.sh /opt/startup.sh
 
 RUN chmod 777 /opt
 
