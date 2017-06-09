@@ -1,13 +1,10 @@
-FROM docksal/cli:1.2-php7
+FROM docksal/cli:1.2-php5
 
 LABEL maintainer "Sean Dietrich <sean.dietrich@inresonance.com>"
 
 # Install the PHP extensions we need
-RUN \
-    DEBIAN_FRONTEND=noninteractive apt-get update && \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y --force-yes --no-install-recommends install \
-    php7.0-fpm \
-    php7.0-dev \
     bzip2 \
     libbz2-dev \
     libc-client2007e-dev \
@@ -42,16 +39,16 @@ RUN \
 
 RUN \
   # PHP-FPM settings
-  ## /etc/php/7.0/fpm/php.ini
-  sed -i '/max_execution_time =/c max_execution_time = 120' /etc/php/7.0/fpm/php.ini && \
-  sed -i '/auto_prepend_file =/c auto_prepend_file = /opt/php/prepend.php' /etc/php/7.0/fpm/php.ini && \
+  ## /etc/php5/fpm/php.ini
+  sed -i '/max_execution_time =/c max_execution_time = 120' /etc/php5/fpm/php.ini && \
+  sed -i '/auto_prepend_file =/c auto_prepend_file = /opt/php/prepend.php' /etc/php5/fpm/php.ini && \
   # PHP CLI settings
-  ## /etc/php/7.0/cli/php.ini
-  sed -i '/auto_prepend_file =/c auto_prepend_file = /opt/php/prepend.php' /etc/php/7.0/cli/php.ini
+  ## /etc/php5/cli/php.ini
+  sed -i '/auto_prepend_file =/c auto_prepend_file = /opt/php/prepend.php' /etc/php5/cli/php.ini
 
 RUN mkdir -p /opt/php
-COPY config/php/prepend.php /opt/php/prepend.php
-COPY startup.sh /opt/startup.sh
+COPY ../../config/php/prepend.php /opt/php/prepend.php
+COPY ../../startup.sh /opt/startup.sh
 
 RUN chmod 777 /opt
 
