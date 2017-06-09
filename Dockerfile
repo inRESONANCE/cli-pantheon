@@ -1,10 +1,12 @@
-FROM docksal/cli:php7
+FROM docksal/cli:1.2-php7
 
 LABEL maintainer "Sean Dietrich <sean.dietrich@inresonance.com>"
 
 # Install the PHP extensions we need
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -y --force-yes --no-install-recommends install \
+RUN \
+    DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y --force-yes --no-install-recommends install \
+    php7.0-fpm \
     php7.0-dev \
     bzip2 \
     libbz2-dev \
@@ -29,20 +31,27 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
   && mv phantomjs-2.1.1-linux-x86_64/bin/phantomjs /srv/bin/phantomjs \
   && rm -rf phantomjs-2.1.1-linux-x86_64 && rm -f phantomjs-2.1.1-linux-x86_64.tar.bz2 \
   && chmod +x /srv/bin/phantomjs \
-  && apt-get -y clean \
-  && apt-get -y autoclean \
-  && apt-get -y autoremove \
-  && rm -rf /var/lib/apt/lists/* && rm -rf && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* && rm -rf /tmp/*
+  && DEBIAN_FRONTEND=noninteractive apt-get -y clean \
+  && DEBIAN_FRONTEND=noninteractive apt-get -y autoclean \
+  && DEBIAN_FRONTEND=noninteractive apt-get -y autoremove \
+  && rm -rf /var/lib/apt/lists/*\
+  && rm -rf \
+  && rm -rf /var/lib/cache/* \
+  && rm -rf /var/lib/log/* \
+  && rm -rf /tmp/*
 
-COPY config/php/php.ini /etc/php/7.0/fpm/php.ini
-COPY config/php/php-cli.ini /etc/php/7.0/cli/php.ini
-
-COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN \
+  # PHP-FPM settings
+  ## /etc/php/7.0/fpm/php.ini
+  sed -i '/max_execution_time =/c max_execution_time = 120' /etc/php/7.0/fpm/php.ini && \
+  sed -i '/auto_prepend_file =/c auto_prepend_file = /opt/php/prepend.php' /etc/php/7.0/fpm/php.ini && \
+  # PHP CLI settings
+  ## /etc/php/7.0/cli/php.ini
+  sed -i '/auto_prepend_file =/c auto_prepend_file = /opt/php/prepend.php' /etc/php/7.0/cli/php.ini
 
 RUN mkdir -p /opt/php
 COPY config/php/prepend.php /opt/php/prepend.php
-
-COPY auth_terminus.sh /opt/auth_terminus.sh
+COPY startup.sh /opt/startup.sh
 
 RUN chmod 777 /opt
 
@@ -50,11 +59,12 @@ USER docker
 
 # Install Terminus
 RUN composer create-project -d /opt --prefer-dist --no-dev pantheon-systems/terminus:^1
-
+RUN cd /opt/terminus && composer update
 RUN mkdir -p ~/.terminus/plugins
 
 # Install Terminus Rsync
 RUN composer create-project --no-dev -d ~/.terminus/plugins pantheon-systems/terminus-rsync-plugin:~1
+RUN cd ~/.terminus/plugins/terminus-rsync-plugin && composer update
 
 ENV PATH="/opt/terminus/bin:${PATH}" \
     FRAMEWORK=drupal8 \
