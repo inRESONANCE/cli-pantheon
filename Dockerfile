@@ -5,6 +5,7 @@ LABEL maintainer "Sean Dietrich <sean.dietrich@inresonance.com>"
 # Install the PHP extensions we need
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y --force-yes --no-install-recommends install \
+    php5-dev \
     bzip2 \
     libbz2-dev \
     libc-client2007e-dev \
@@ -20,8 +21,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     xfonts-75dpi \
     wkhtmltopdf \
     && pecl install imagick \
-    && pecl install oauth-2.0.2 \
-    && pecl install redis-3.0.0 \
+    && pecl install oauth-1.2.3 \
+    && pecl install redis-2.2.8 \
     && mkdir -p /srv/bin \
     && cd /srv/bin \
     && curl -fsSL "https://github.com/Medium/phantomjs/releases/download/v2.1.1/phantomjs-2.1.1-linux-x86_64.tar.bz2" | tar -xjv \
