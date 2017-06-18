@@ -48,8 +48,6 @@ RUN \
   sed -i '/max_execution_time =/c max_execution_time = 120' /etc/php5/fpm/php.ini && \
   sed -i '/auto_prepend_file =/c auto_prepend_file = /opt/php/prepend.php' /etc/php5/fpm/php.ini && \
   sed -i '/variables_order =/c variables_order = "EGPCS"' /etc/php5/fpm/php.ini && \
-  ## /etc/php/7.0/fpm/pool.d/www.conf
-  sed -i '/listen =/c listen = /php/php-fpm.sock' /etc/php5/fpm/pool.d/www.conf && \
   # PHP CLI settings
   ## /etc/php5/cli/php.ini
   sed -i '/variables_order =/c variables_order = "EGPCS"' /etc/php5/cli/php.ini && \
